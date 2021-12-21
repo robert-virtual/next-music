@@ -3,6 +3,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
   const [videos, setVideos] = useState([]);
   const [search, setSearch] = useState("acdc");
   useEffect(() => {
@@ -14,8 +15,10 @@ export default function Home() {
       console.log("link");
       endpoint = `https://music-hn.herokuapp.com/api.v2/videos?url=${search}`;
     }
+    setLoading(true);
     const data = await fetch(endpoint);
     const res = await data.json();
+    setLoading(false);
     console.log(res);
     setVideos(res.videos);
   }
@@ -107,81 +110,97 @@ export default function Home() {
           </button>
         </div>
       </nav>
-      <main className="p-4 mt-20 text-white">
-        <div className={styles.mygrid}>
-          {videos.map(({ id, title, bestThumbnail, url, duration }) => (
-            <div key={id} className="group relative">
-              <button
-                onClick={() => download(url, "mp4")}
-                className={
-                  "absolute flex opacity-0  p-2 top-1 transition-all right-1 bg-white text-black group-hover:opacity-100 hover:text-blue-500 " +
-                  styles.group2
-                }
-              >
-                <span className={styles.pop}>Video</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={() => download(url, "mp3")}
-                className={
-                  "absolute flex opacity-0  p-2 top-14 transition-all right-1 bg-white text-black group-hover:opacity-100 hover:text-blue-500 " +
-                  styles.group2
-                }
-              >
-                <span className={styles.pop}>Audio</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"
-                  />
-                </svg>
-              </button>
-              <img src={bestThumbnail.url} alt={title} />
-              <span className="bg-black absolute bottom-7 right-2 px-1">
-                {duration}
-              </span>
-              <p>{title.substring(0, 40)}...</p>
+      <main className="min-h-screen p-4 mt-20 text-white">
+        {loading ? (
+          <div className="animate-pulse w-full">
+            <div className={styles.mygrid}>
+              {Array.from(Array(15).keys()).map((e, i) => (
+                <div
+                  key={i.toString()}
+                  className="w-[300px] h-[200px] bg-neutral-700 rounded"
+                ></div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <div className={styles.mygrid}>
+            {videos.map(({ id, title, bestThumbnail, url, duration }) => (
+              <div key={id} className="group relative">
+                <button
+                  onClick={() => download(url, "mp4")}
+                  className={
+                    "absolute flex opacity-0  p-2 top-1 transition-all right-1 bg-white text-black group-hover:opacity-100 hover:text-blue-500 " +
+                    styles.group2
+                  }
+                >
+                  <span className={styles.pop}>Video</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => download(url, "mp3")}
+                  className={
+                    "absolute flex opacity-0  p-2 top-14 transition-all right-1 bg-white text-black group-hover:opacity-100 hover:text-blue-500 " +
+                    styles.group2
+                  }
+                >
+                  <span className={styles.pop}>Audio</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"
+                    />
+                  </svg>
+                </button>
+                <img src={bestThumbnail.url} alt={title} />
+                <span className="bg-black absolute bottom-7 right-2 px-1">
+                  {duration}
+                </span>
+                <p>{title.substring(0, 40)}...</p>
+              </div>
+            ))}
+          </div>
+        )}
       </main>
       <footer className="text-2xl text-gray-500 p-6 flex flex-col justify-center items-center">
-        <p>
-          Created by <span>Roberto Castillo </span>
-          web developer
-        </p>
-        <p>
-          Email: <span>robetocastillo945@gmail.com</span>{" "}
-        </p>
-        <p>
-          Phone: <span>+504 88137603</span>{" "}
-        </p>
         <details>
-          <summary>Technologies used</summary>
-          <p>Framework: Nextjs</p>
-          <p>CSS: Tailwindcss</p>
-          <p>API(backend): Nodejs</p>
+          <summary>Developer info</summary>
+          <p>
+            Created by <span>Roberto Castillo </span>
+            web developer
+          </p>
+          <p>
+            Email: <span>robetocastillo945@gmail.com</span>{" "}
+          </p>
+          <p>
+            Phone: <span>+504 88137603</span>{" "}
+          </p>
+          <details>
+            <summary>Used Technologies</summary>
+            <p>Framework: Nextjs</p>
+            <p>CSS: Tailwindcss</p>
+            <p>API(backend): Nodejs</p>
+          </details>
         </details>
       </footer>
     </div>
