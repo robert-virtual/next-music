@@ -1,29 +1,27 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Image from "next/image";
 
-export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [videos, setVideos] = useState([]);
-  const [search, setSearch] = useState("acdc");
-  useEffect(() => {
-    buscar();
-  }, []);
+export default function Home({ videos }) {
+  const [loading, setLoading] = useState(false);
+  // const [videos, setVideos] = useState([]);
+  const router = useRouter();
+  const [search, setSearch] = useState(() => router.query.search || "acdc");
+
   async function buscar() {
-    let endpoint = `https://music-hn.herokuapp.com/api.v2/videos?q=${search}`;
-    if (search.includes("https:")) {
-      console.log("link");
-      endpoint = `https://music-hn.herokuapp.com/api.v2/videos?url=${search}`;
-    }
     setLoading(true);
-    const data = await fetch(endpoint);
-    const res = await data.json();
+    await router.push({ pathname: "/", query: { search } });
     setLoading(false);
-    console.log(res);
-    setVideos(res.videos);
   }
+  const [mylocation, setMylocation] = useState();
+  useEffect(() => {
+    //browser
+    setMylocation(window.location);
+  }, []);
   function download(url, format) {
-    location.href = `https://music-hn.herokuapp.com/api.v2/videos/download?url=${url}&format=${format}`;
+    mylocation.href = `https://music-hn.herokuapp.com/api.v2/videos/download?url=${url}&format=${format}`;
   }
   return (
     <div>
@@ -33,6 +31,7 @@ export default function Home() {
           name="description"
           content="app para descargar musica de youtube"
         />
+
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <nav className="sm:hidden fixed p-2 top-0 z-50 bg-neutral-800 flex items-center justify-center w-full">
@@ -79,7 +78,7 @@ export default function Home() {
         <div className="justify-center w-full sm:w-2/3 flex items-center sm:justify-start">
           <input
             className="w-96 p-2 bg-black  text-white outline-none border-2 border-black focus:border-blue-400"
-            type="text"
+            type="search"
             onKeyUp={({ key }) => {
               if (key == "Enter") {
                 buscar();
@@ -172,7 +171,13 @@ export default function Home() {
                     />
                   </svg>
                 </button>
-                <img src={bestThumbnail.url} alt={title} />
+                <Image
+                  src={bestThumbnail.url}
+                  alt={title}
+                  width={300}
+                  height={168.33}
+                />
+                {/* <img src={bestThumbnail.url} alt={title} /> */}
                 <span className="bg-black absolute bottom-7 right-2 px-1">
                   {duration}
                 </span>
@@ -207,11 +212,18 @@ export default function Home() {
   );
 }
 
-export async function getStaticProps(context) {
-  console.log(context);
-  const data = await fetch(
-    "https://music-hn.herokuapp.com/api.v2/videos?q=acdc"
-  );
+export async function getServerSideProps(context) {
+  let {
+    query: { search },
+  } = context;
+  search = search || "acdc";
+  console.log(search);
+
+  let endpoint = `https://music-hn.herokuapp.com/api.v2/videos?q=${search}`;
+  if (search.includes("https:")) {
+    endpoint = `https://music-hn.herokuapp.com/api.v2/videos?url=${search}`;
+  }
+  const data = await fetch(endpoint);
   const res = await data.json();
   return {
     props: {
