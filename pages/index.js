@@ -33,6 +33,11 @@ export default function Home({ videos }) {
         />
 
         <link rel="icon" href="/favicon.ico" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6930315707331281"
+          crossOrigin="anonymous"
+        ></script>
       </Head>
       <nav className="sm:hidden fixed p-2 top-0 z-50 bg-neutral-800 flex items-center justify-center w-full">
         <div className="flex items-center justify-center w-full text-white">
