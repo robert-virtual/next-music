@@ -133,7 +133,7 @@ export default function Home({ videos }) {
                 <button
                   onClick={() => download(url, "mp4")}
                   className={
-                    "absolute flex opacity-0  p-2 top-1 transition-all right-1 bg-white text-black group-hover:opacity-100 hover:text-blue-500 " +
+                    "z-50 absolute opacity-0 flex p-2 top-1 transition-all right-1 bg-white text-black group-hover:opacity-100 hover:text-blue-500 " +
                     styles.group2
                   }
                 >
@@ -156,7 +156,7 @@ export default function Home({ videos }) {
                 <button
                   onClick={() => download(url, "mp3")}
                   className={
-                    "absolute flex opacity-0  p-2 top-14 transition-all right-1 bg-white text-black group-hover:opacity-100 hover:text-blue-500 " +
+                    "z-50 absolute flex opacity-0  p-2 top-14 transition-all right-1 bg-white text-black group-hover:opacity-100 hover:text-blue-500 " +
                     styles.group2
                   }
                 >
