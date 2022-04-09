@@ -62,7 +62,10 @@ export default function Home({ videos }) {
       </nav>
       <nav className="bottom-0 fixed p-2 sm:top-0 sm:bottom-auto z-50 bg-neutral-800 flex items-center justify-center w-full">
         <div className="hidden sm:flex items-center justify-start w-1/3 text-white">
-          <div className="flex bg-gradient-to-r from-blue-500 to-violet-600 p-2 rounded-sm">
+          <div
+            onClick={() => router.push("/")}
+            className="cursor-pointer flex bg-gradient-to-r from-blue-500 to-violet-600 p-2 rounded-sm"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
